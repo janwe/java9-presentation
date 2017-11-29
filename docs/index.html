@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>java9-presentation</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <style type="text/css">
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+
+      .remark-code {text-align: left; font-size: 1.2rem;}
+
+      .inverse {background-color: #272822; color: #777872; text-shadow: 0 0 20px #333;}
+      .inverse h1,
+      .inverse h2 {color: #f3f3f3; line-height: 0.8em;}
+      .inverse h2 {color: #a3a3a3;}
+
+      ul {font-size: 1.5em}
+      li {padding-bottom: 0.5em;}
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle, inverse
+background-image: url(bekklogo-white.png)
+background-position: center 20px
+background-repeat: no-repeat
+background-size: 250px
+
+# Java 9 - what else is new?
+
+## Jan Fredrik Wedén
+
+???
+
+Hei, jeg heter Jan Fredrik, jobber i BEKK og skal snakke litt om Java 9.
+
+Si noe om at Jigsaw har de fleste hørt om. Nå skal vi se på noen av de andre tingene som er nye.
+
+---
+
+class: center, middle
+
+# Java Shell (jshell)!
+
+???
+
+Vi har endelig fått en REPL for Java!
+
+---
+
+# jshell - some features
+
+- Trying out snippets of code
+- Tab completion for snippets and commands
+- Changing definitions
+- Forward references
+- Editing and searching in shell, like you expect
+- External editor with **/edit**
+- Loading external code through classpath or module path
+- Saving and loading external scripts
+
+???
+
+Verdt å nevne at shell editing fungerer alla BSD editline/GNU readline med navigering i history etc (Ctr-arrow for navigering pr snippet og ikke pr linje)
+
+---
+
+# Some jshell commands
+
+- **/exit** - first thing to know is how to get out (^D also works)
+- **/help** - list of available commands
+- **/list** - lists all snippets
+- **/vars /types /methods** - list current vars etc
+
+---
+
+# Collections (old school)
+
+```
+Set<String> set = new HashSet<>();
+set.add("Java");
+set.add("nine");
+set.add("collections");
+set = Collections.unmodifiableSet(set);
+```
+--
+```
+Set<String> set = Collections.unmodifiableSet(new HashSet<>(Arrays.asList("Java", "nine", "collections")));
+```
+--
+```
+Set<String> set = Collections.unmodifiableSet(new HashSet<String>() {{
+    add("Java"); add("nine"); add("collections");
+}});
+```
+--
+```
+Set<String> set = Collections.unmodifiableSet(Stream.of("Java", "nine", "collections").collect(toSet()));
+```
+
+---
+
+# Collection factory methods
+
+```
+Set<String> mySet = Set.of("Java", "nine", "collections");
+```
+
+```
+List<String> myList = List.of("Java", "nine", "collections");
+```
+
+```
+Map<String,String> myMap = Map.of("Duke", "Java", "coolest", "nine", "better", "collections");
+```
+
+```
+Map<String,String> myEntryMap = Map.ofEntries(
+    Map.entry("Duke", "Java"),
+    Map.entry("coolest", "nine"),
+    Map.entry("better", "collections")
+);
+```
+
+---
+
+class: center, middle
+
+# Deprecation
+## Stuff is actually going to be removed from Java!
+
+---
+
+class: center, middle, inverse
+background-image: url(bekklogo-white.png)
+background-position: center 20px
+background-repeat: no-repeat
+background-size: 250px
+
+# Thanks!
+## @jfweden
+## janwe.github.io/java9-presentation
+
+---
+
+class: center, middle
+
+# Resources and inspiration
+
+#### [JavaZone 2017: Java SE 9, and its hidden treasures walkthrough](https://2017.javazone.no/program/e7edc7c29e7e4a619aa2bcd5bd577f57)
+#### https://docs.oracle.com/javase/9/jshell/toc.htm
+#### http://openjdk.java.net/projects/jdk9/
+
+    </textarea>
+    <script src="remark-latest.min.js" type="text/javascript">
+    </script>
+    <script type="text/javascript">
+      var slideshow = remark.create({
+        ratio: '16:9',
+        highlightLanguage: 'java',
+        highlightStyle: 'monokai sublime'
+      });
+    </script>
+  </body>
+</html>
