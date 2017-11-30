@@ -95,23 +95,23 @@ class: center, middle
 ```
 Set<String> set = new HashSet<>();
 set.add("Java");
-set.add("nine");
+set.add("eight");
 set.add("collections");
 set = Collections.unmodifiableSet(set);
 ```
 --
 ```
-Set<String> set = Collections.unmodifiableSet(new HashSet<>(Arrays.asList("Java", "nine", "collections")));
+Set<String> set = Collections.unmodifiableSet(new HashSet<>(Arrays.asList("Java", "eight", "collections")));
 ```
 --
 ```
 Set<String> set = Collections.unmodifiableSet(new HashSet<String>() {{
-    add("Java"); add("nine"); add("collections");
+    add("Java"); add("eight"); add("collections");
 }});
 ```
 --
 ```
-Set<String> set = Collections.unmodifiableSet(Stream.of("Java", "nine", "collections").collect(toSet()));
+Set<String> set = Collections.unmodifiableSet(Stream.of("Java", "eight", "collections").collect(toSet()));
 ```
 --
 ## Guava anyone??
@@ -123,15 +123,15 @@ Set<String> set = Collections.unmodifiableSet(Stream.of("Java", "nine", "collect
 ```
 Set<String> mySet = Set.of("Java", "nine", "collections");
 ```
-
+--
 ```
 List<String> myList = List.of("Java", "nine", "collections");
 ```
-
+--
 ```
 Map<String,String> myMap = Map.of("Duke", "Java", "coolest", "nine", "better", "collections");
 ```
-
+--
 ```
 Map<String,String> myEntryMap = Map.ofEntries(
     Map.entry("Duke", "Java"),
@@ -197,10 +197,10 @@ List<Optional<String>> optionals = List.of(
 System.out.println("Optionals in list:")
 optionals.stream().forEach(System.out::println)
 
-System.out.println("\nAll Optional values (or null):")
+System.out.println("All Optional values (or null):")
 optionals.stream().map(o -> o.orElse(null)).forEach(System.out::println)
 
-System.out.println("\nOnly present Optional values:")
+System.out.println("Only present Optional values:")
 *optionals.stream().flatMap(Optional::stream).forEach(System.out::println)
 ```
 
@@ -217,7 +217,51 @@ class: center, middle
 
 ```
 void copyFile(InputStream in, OutputStream out) throws IOException {
+    try (in; out) {
+        in.transferTo(out);
+    }
+}
+
+InputStream inFile = Files.newInputStream(Paths.get("in.txt"));
+OutputStream outFile = Files.newOutputStream(Paths.get("out.txt"));
+
+copyFile(inFile, outFile);
+
+try (InputStream inFileAgain = Files.newInputStream(Paths.get("in.txt"));) {
+    byte[] allBytes = inFileAgain.readAllBytes();
+}
+```
+
+---
+
+- "Effectively final" variables allowed in try-with-resources
+- New methods on `InputStream`
+
+```
+void copyFile(InputStream in, OutputStream out) throws IOException {
 *    try (in; out) {
+        in.transferTo(out);
+    }
+}
+
+InputStream inFile = Files.newInputStream(Paths.get("in.txt"));
+OutputStream outFile = Files.newOutputStream(Paths.get("out.txt"));
+
+copyFile(inFile, outFile);
+
+try (InputStream inFileAgain = Files.newInputStream(Paths.get("in.txt"));) {
+    byte[] allBytes = inFileAgain.readAllBytes();
+}
+```
+
+---
+
+- "Effectively final" variables allowed in try-with-resources
+- New methods on `InputStream`
+
+```
+void copyFile(InputStream in, OutputStream out) throws IOException {
+    try (in; out) {
 *        in.transferTo(out);
     }
 }
@@ -342,7 +386,10 @@ class: center, middle
 
 # Streams
 
-`Stream` (and primitive streams) now have `takeWhile(Predicate)` and `dropWhile(Predicate`)
+## `Stream` (and primitive streams) now have
+
+- `takeWhile(Predicate)`
+- `dropWhile(Predicate`)
 
 ```
 //Expected 0,1,2,3,4
