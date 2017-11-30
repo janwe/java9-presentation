@@ -79,6 +79,7 @@ Verdt å nevne at shell editing fungerer alla BSD editline/GNU readline med navi
 - **`/exit`** - first thing to know is how to get out (`^D` also works)
 - **`/help`** - list of available commands
 - **`/list`** - lists all snippets
+- **`/save /open`** - save and open snippets to and from disk
 - **`/vars /types /methods`** - list current vars etc
 
 ---
@@ -188,14 +189,9 @@ This method can be used to transform a Stream of optional elements to a Stream o
 ---
 
 # TODO
-- Kode som demonstrerer Optional
-- Process import correctly JEP 216
-- HTTP/2
+- HTTP/2 (caveat: incubator module)
 - I/O
-- Streams??
 - try-with-resources
-- multi release JARs
-- private methods in interfaces??
 
 ---
 class: center, middle
@@ -254,17 +250,68 @@ class: center, middle
 
 ---
 
+# Streams
+
+`Stream` (and primitive streams) now have `takeWhile(Predicate)` and `dropWhile(Predicate`)
+
+```
+//Expected 0,1,2,3,4
+IntStream.of(0,1,2,3,4,5,6,7,8,9).takeWhile(i -> i < 5).forEach(System.out::println)
+```
+
+```
+//Expected 5,6,7,8,9
+IntStream.of(0,1,2,3,4,5,6,7,8,9).dropWhile(i -> i < 5).forEach(System.out::println)
+```
+
+---
+
+# Multi-release JARs
+
+```
+jar root
+  - A.class
+  - B.class
+  - C.class
+  - D.class
+  - META-INF
+     - versions
+        - 9
+           - A.class
+           - B.class
+        - 10
+           - A.class
+```
+
+---
+
+# Private methods in interfaces
+
+```
+interface Greeter {
+    ...
+    default void greetSomeone(String personName, boolean female) {
+        System.out.println("Hi " + getTitle(female) + " " + personName);
+    }
+    default void farewellSomeone(String personName, boolean female) {
+        System.out.println("Bye " + getTitle(female) + " " + personName);
+    }
+    private String getTitle(boolean female) {
+        return female ? "Ms" : "Mr";
+    }
+}
+```
+
+---
+
+- Process import statements correctly
 - `javac --release N` (no more source and target versions, `rt.jar` etc)
 - `Flow` class (with `Publisher`, `Subscriber`, `Processor`, `Subscription` for reactive streams)
 - "Effectively final" variables can be used in try-with-resources
-- Private methods in interfaces
-- Streams (and primitive streams) now have `takeWhile(Predicate)` and `dropWhile(Predicate`)
 - HTML5 JavaDoc (with search)
 - UDP security (DTLS)
-- Process import statements correctly
 - UTF-8 property files and Unicode 7.0 support
 - New version string schema for all JDK `$MAJOR.$MINOR.$SECURITY.$PATCH`
-- Multi-release JAR files
 
 ---
 
