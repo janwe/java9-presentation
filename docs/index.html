@@ -185,13 +185,103 @@ public Stream<T> stream​()
 ???
 If a value is present, returns a sequential Stream containing only that value, otherwise returns an empty Stream.
 This method can be used to transform a Stream of optional elements to a Stream of present value elements:
+--
+```
+List<Optional<String>> optionals = List.of(
+    Optional.of("Java"),
+    Optional.of("nine"),
+    Optional.empty(),
+    Optional.of("Optional")
+);
+
+System.out.println("Optionals in list:")
+optionals.stream().forEach(System.out::println)
+
+System.out.println("\nAll Optional values (or null):")
+optionals.stream().map(o -> o.orElse(null)).forEach(System.out::println)
+
+System.out.println("\nOnly present Optional values:")
+*optionals.stream().flatMap(Optional::stream).forEach(System.out::println)
+```
 
 ---
 
-# TODO
-- HTTP/2 (caveat: incubator module)
-- I/O
-- try-with-resources
+class: center, middle
+
+# I/O and resources
+
+---
+
+- "Effectively final" variables allowed in try-with-resources
+- New methods on `InputStream`
+
+```
+void copyFile(InputStream in, OutputStream out) throws IOException {
+*    try (in; out) {
+*        in.transferTo(out);
+    }
+}
+
+InputStream inFile = Files.newInputStream(Paths.get("in.txt"));
+OutputStream outFile = Files.newOutputStream(Paths.get("out.txt"));
+
+copyFile(inFile, outFile);
+
+try (InputStream inFileAgain = Files.newInputStream(Paths.get("in.txt"));) {
+*    byte[] allBytes = inFileAgain.readAllBytes();
+}
+```
+
+---
+
+class: center, middle
+
+# HTTP/2
+
+---
+
+# New HTTP client in Java!
+
+- Supports HTTP/2 and WebSockets
+- Supports sync and async request modes
+- Supports multiple HTTP/2 push responses
+- Replaces the legacy `HttpURLConnection`
+
+---
+
+# Caveats
+
+- Incubator module
+- Not all (expected) features currently available
+- Apparently vulnerable to attacks (BREACH and CRIME)
+- Sloppy about cookie security
+- HTTP/1.1 encryption
+
+---
+
+# Example
+
+```
+import jdk.incubator.http.*;
+
+HttpClient.newHttpClient()
+        .sendAsync(
+                HttpRequest.newBuilder(URI.create("https://www.google.no"))
+                        .GET()
+                        .build(),
+                HttpResponse.BodyHandler.asString())
+        .thenAccept(response -> System.out.println(response.statusCode()));
+```
+--
+## Must add incubator module to `jshell`
+
+```
+jshell --add-modules jdk.incubator.httpclient
+```
+
+```
+/env -add-modules jdk.incubator.httpclient
+```
 
 ---
 class: center, middle
@@ -296,7 +386,7 @@ interface Greeter {
     default void farewellSomeone(String personName, boolean female) {
         System.out.println("Bye " + getTitle(female) + " " + personName);
     }
-    private String getTitle(boolean female) {
+*    private String getTitle(boolean female) {
         return female ? "Ms" : "Mr";
     }
 }
@@ -304,10 +394,11 @@ interface Greeter {
 
 ---
 
+# Finally
+
 - Process import statements correctly
 - `javac --release N` (no more source and target versions, `rt.jar` etc)
 - `Flow` class (with `Publisher`, `Subscriber`, `Processor`, `Subscription` for reactive streams)
-- "Effectively final" variables can be used in try-with-resources
 - HTML5 JavaDoc (with search)
 - UDP security (DTLS)
 - UTF-8 property files and Unicode 7.0 support
@@ -338,6 +429,7 @@ class: center, middle
 #### http://www.oracle.com/technetwork/java/javase/9-deprecated-features-3745636.html
 #### https://docs.oracle.com/javase/9/docs/api/overview-summary.html
 #### https://dzone.com/articles/java-9-besides-modules
+#### https://dzone.com/articles/java-9-http-20
 
     </textarea>
     <script src="remark-latest.min.js" type="text/javascript">
@@ -346,7 +438,8 @@ class: center, middle
       var slideshow = remark.create({
         ratio: '16:9',
         highlightLanguage: 'java',
-        highlightStyle: 'monokai sublime'
+        highlightStyle: 'monokai sublime',
+        highlightLines: true
       });
     </script>
   </body>
