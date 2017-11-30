@@ -49,7 +49,7 @@ Si noe om at Jigsaw har de fleste hørt om. Nå skal vi se på noen av de andre 
 
 class: center, middle
 
-# Java Shell (jshell)!
+# Java Shell (`jshell`)!
 
 ???
 
@@ -64,7 +64,7 @@ Vi har endelig fått en REPL for Java!
 - Changing definitions
 - Forward references
 - Editing and searching in shell, like you expect
-- External editor with **/edit**
+- External editor with **`/edit`**
 - Loading external code through classpath or module path
 - Saving and loading external scripts
 
@@ -76,10 +76,16 @@ Verdt å nevne at shell editing fungerer alla BSD editline/GNU readline med navi
 
 # Some jshell commands
 
-- **/exit** - first thing to know is how to get out (^D also works)
-- **/help** - list of available commands
-- **/list** - lists all snippets
-- **/vars /types /methods** - list current vars etc
+- **`/exit`** - first thing to know is how to get out (`^D` also works)
+- **`/help`** - list of available commands
+- **`/list`** - lists all snippets
+- **`/vars /types /methods`** - list current vars etc
+
+---
+
+class: center, middle
+
+# Immutable collections
 
 ---
 
@@ -106,10 +112,12 @@ Set<String> set = Collections.unmodifiableSet(new HashSet<String>() {{
 ```
 Set<String> set = Collections.unmodifiableSet(Stream.of("Java", "nine", "collections").collect(toSet()));
 ```
+--
+## Guava anyone??
 
 ---
 
-# Collection factory methods
+# New collection factory methods
 
 ```
 Set<String> mySet = Set.of("Java", "nine", "collections");
@@ -131,12 +139,132 @@ Map<String,String> myEntryMap = Map.ofEntries(
 );
 ```
 
+???
+
+Det Java nå har fått ligner jo mistenkelig på Guava, men vi har altså fått det natively i JDK-en og slipper å importere noe som helst.
+
+Men ikke like kraftig som Guava's Builder-classes.
+
+---
+
+# Such collections
+
+- Are structurally immutable (mutators throw `UnsupportedOperationException`)
+- Disallow `null` elements (and keys)
+- Are serializable if all elements (and keys) are
+- Sets and Maps throw `IllegalArgumentException` for duplicate elements/keys at creation time
+- Iteration order of Lists behave as expected and is undefined for Sets and Maps
+- Are value based (you should not rely on `==`)
+
 ---
 
 class: center, middle
 
+# `Optional` stuff
+
+---
+
+# Optional har fått
+
+```
+public void ifPresentOrElse​(Consumer<? super T> action, Runnable emptyAction)
+```
+???
+If a value is present, performs the given action with the value, otherwise performs the given empty-based action.
+--
+```
+public Optional<T> or​(Supplier<? extends Optional<? extends T>> supplier)
+```
+???
+If a value is present, returns an Optional describing the value, otherwise returns an Optional produced by the supplying function.
+--
+```
+public Stream<T> stream​()
+```
+???
+If a value is present, returns a sequential Stream containing only that value, otherwise returns an empty Stream.
+This method can be used to transform a Stream of optional elements to a Stream of present value elements:
+
+---
+
+# TODO
+- Kode som demonstrerer Optional
+- Process import correctly JEP 216
+- HTTP/2
+- I/O
+- Streams??
+- try-with-resources
+- multi release JARs
+- private methods in interfaces??
+
+---
+class: center, middle
+
 # Deprecation
 ## Stuff is actually going to be removed from Java!
+
+---
+
+# Enhanced `@Deprecated`
+
+- Added `since` attribute
+- Added `forRemoval` attribute
+
+```
+@Deprecated(since="9", forRemoval=true)
+```
+
+---
+
+# New deprecations
+
+- Applet API
+- `Observer` and `Observable`
+- boxed primitive constructors
+- `Object.finalize`
+- `java.security.acl` API
+- `com.sun.jarsigner` package
+- `policytool`
+
+---
+# Stuff to be gone
+
+- CORBA
+- `sun.misc.Unsafe.defineClass`
+- pre 1.2 `SecurityManager` methods
+- `java.activation`
+- `java.se.ee`
+- `java.transaction` (subset of JTA to support CORBA interoperation)
+- `java.xml.bind`
+- `java.xml.ws`
+- `java.xml.ws.annotation`
+
+---
+# Stuff gone in 9
+
+- `_` as identifier
+- `hprof` and `jhat` tools
+- Demos and Samples
+
+---
+
+class: center, middle
+
+# In other `new`s
+
+---
+
+- `javac --release N` (no more source and target versions, `rt.jar` etc)
+- `Flow` class (with `Publisher`, `Subscriber`, `Processor`, `Subscription` for reactive streams)
+- "Effectively final" variables can be used in try-with-resources
+- Private methods in interfaces
+- Streams (and primitive streams) now have `takeWhile(Predicate)` and `dropWhile(Predicate`)
+- HTML5 JavaDoc (with search)
+- UDP security (DTLS)
+- Process import statements correctly
+- UTF-8 property files and Unicode 7.0 support
+- New version string schema for all JDK `$MAJOR.$MINOR.$SECURITY.$PATCH`
+- Multi-release JAR files
 
 ---
 
@@ -160,6 +288,9 @@ class: center, middle
 #### [JavaZone 2017: Java SE 9, and its hidden treasures walkthrough](https://2017.javazone.no/program/e7edc7c29e7e4a619aa2bcd5bd577f57)
 #### https://docs.oracle.com/javase/9/jshell/toc.htm
 #### http://openjdk.java.net/projects/jdk9/
+#### http://www.oracle.com/technetwork/java/javase/9-deprecated-features-3745636.html
+#### https://docs.oracle.com/javase/9/docs/api/overview-summary.html
+#### https://dzone.com/articles/java-9-besides-modules
 
     </textarea>
     <script src="remark-latest.min.js" type="text/javascript">
