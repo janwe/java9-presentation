@@ -165,7 +165,7 @@ class: center, middle
 
 ---
 
-# Optional har fått
+# New methods on `Optional`
 
 ```
 public void ifPresentOrElse​(Consumer<? super T> action, Runnable emptyAction)
@@ -211,31 +211,9 @@ class: center, middle
 # I/O and resources
 
 ---
+# I/O and resources
 
 - "Effectively final" variables allowed in try-with-resources
-- New methods on `InputStream`
-
-```
-void copyFile(InputStream in, OutputStream out) throws IOException {
-    try (in; out) {
-        in.transferTo(out);
-    }
-}
-
-InputStream inFile = Files.newInputStream(Paths.get("in.txt"));
-OutputStream outFile = Files.newOutputStream(Paths.get("out.txt"));
-
-copyFile(inFile, outFile);
-
-try (InputStream inFileAgain = Files.newInputStream(Paths.get("in.txt"));) {
-    byte[] allBytes = inFileAgain.readAllBytes();
-}
-```
-
----
-
-- "Effectively final" variables allowed in try-with-resources
-- New methods on `InputStream`
 
 ```
 void copyFile(InputStream in, OutputStream out) throws IOException {
@@ -255,8 +233,8 @@ try (InputStream inFileAgain = Files.newInputStream(Paths.get("in.txt"));) {
 ```
 
 ---
+# I/O and resources
 
-- "Effectively final" variables allowed in try-with-resources
 - New methods on `InputStream`
 
 ```
@@ -298,16 +276,15 @@ class: center, middle
 - Incubator module
 - Not all (expected) features currently available
 - Apparently vulnerable to attacks (BREACH and CRIME)
-- Sloppy about cookie security
+- Apparently sloppy about cookie security
 - HTTP/1.1 encryption
 
 ---
 
-# Example
+# `HttpClient` Example
 
 ```
 import jdk.incubator.http.*;
-
 HttpClient.newHttpClient()
         .sendAsync(
                 HttpRequest.newBuilder(URI.create("https://www.google.no"))
@@ -317,14 +294,16 @@ HttpClient.newHttpClient()
         .thenAccept(response -> System.out.println(response.statusCode()));
 ```
 --
-## Must add incubator module to `jshell`
+### Must add incubator module to `jshell`
 
-```
-jshell --add-modules jdk.incubator.httpclient
+When starting:
+```bash
+$ jshell --add-modules jdk.incubator.httpclient
 ```
 
+Or inside `jshell`
 ```
-/env -add-modules jdk.incubator.httpclient
+jshell> /env -add-modules jdk.incubator.httpclient
 ```
 
 ---
